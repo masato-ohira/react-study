@@ -35,6 +35,7 @@ const Todos: NextPage = () => {
           <Tr>
             <Th>進捗</Th>
             <Th>タイトル</Th>
+            <Th>作成日時</Th>
             <Th>更新日時</Th>
             <Th>操作</Th>
           </Tr>

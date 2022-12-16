@@ -8,12 +8,13 @@ export const getTodos = async () => {
   try {
     const query = gql`
       {
-        todosConnection(last: 9999, orderBy: updatedAt_DESC) {
+        todosConnection(last: 9999, orderBy: createdAt_DESC) {
           edges {
             node {
               id
               title
               done
+              createdAt
               updatedAt
             }
           }

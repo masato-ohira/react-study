@@ -18,7 +18,7 @@ export const Layout = ({ children }: { children: ReactNode }) => {
     <Container minWidth={'container.xl'}>
       <Flex flexWrap={'wrap'} p={8} columnGap={8}>
         <Box width={'3xs'}>
-          <Stack>
+          <Stack spacing={4}>
             {menu.map((i, key) => {
               return (
                 <Link href={i.to} key={key}>
