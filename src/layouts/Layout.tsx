@@ -1,7 +1,8 @@
-import { Flex, Box, Button, Stack, Container } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
-import Link from 'next/link'
 import { ReactNode } from 'react'
+
+import { Flex, Box, Button, Stack, Container } from '@chakra-ui/react'
+import Link from 'next/link'
 
 export const Layout = ({ children }: { children: ReactNode }) => {
   const router = useRouter()
@@ -15,9 +16,33 @@ export const Layout = ({ children }: { children: ReactNode }) => {
   }
 
   return (
-    <Container minWidth={'container.xl'}>
-      <Flex flexWrap={'wrap'} p={8} columnGap={8}>
-        <Box width={'3xs'}>
+    <Container
+      className='l-container'
+      minW={{
+        base: '0',
+        md: 'container.xl',
+      }}
+    >
+      <Box
+        className='l-flex'
+        display={{
+          base: 'block',
+          md: 'flex',
+        }}
+        flexWrap={'wrap'}
+        p={{
+          base: 4,
+          md: 8,
+        }}
+        columnGap={8}
+      >
+        <Box
+          className='l-side'
+          width={{
+            base: '100%',
+            md: '3xs',
+          }}
+        >
           <Stack spacing={4}>
             {menu.map((i, key) => {
               return (
@@ -30,8 +55,10 @@ export const Layout = ({ children }: { children: ReactNode }) => {
             })}
           </Stack>
         </Box>
-        <Box flex={1}>{children}</Box>
-      </Flex>
+        <Box className='l-content' flex={1}>
+          {children}
+        </Box>
+      </Box>
     </Container>
   )
 }

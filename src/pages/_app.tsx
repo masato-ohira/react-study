@@ -10,6 +10,7 @@ const theme = extendTheme({
   fonts: {
     heading: `${fonts.sans}`,
     body: `${fonts.sans}`,
+    enSans: `${fonts.enSans}`,
   },
 })
 

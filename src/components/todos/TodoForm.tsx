@@ -20,7 +20,6 @@ import {
   FormLabel,
 } from '@chakra-ui/react'
 import { TodoProps, TodoModal } from '@/components'
-import { MdAdd } from 'react-icons/md'
 
 export const TodoForm = () => {
   // data
@@ -96,71 +95,54 @@ export const TodoForm = () => {
   }
 
   return (
-    <>
-      <Button
-        mb={5}
-        colorScheme={'blue'}
-        leftIcon={<MdAdd size={24} />}
-        onClick={() => {
-          setModal({ show: true })
-        }}
-      >
-        新規登録
-      </Button>
-      <TodoModal>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <Box py={6}>
-            <Stack spacing={5}>
-              <FormControl isInvalid={hasError}>
-                <FormLabel>タイトル</FormLabel>
-                <Input
-                  isReadOnly={loading}
-                  {...register('title', {
-                    required: 'タイトルは必須項目です',
-                  })}
-                />
-                {hasError && (
-                  <FormErrorMessage>{getErrorMsg('title')}</FormErrorMessage>
-                )}
-              </FormControl>
-              {isEditMode && (
-                <FormControl>
-                  <HStack>
-                    <FormLabel m={0} lineHeight={1}>
-                      進捗
-                    </FormLabel>
-                    <Switch {...register('done')} />
-                  </HStack>
-                </FormControl>
+    <TodoModal>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Box py={6}>
+          <Stack spacing={5}>
+            <FormControl isInvalid={hasError}>
+              <FormLabel>タイトル</FormLabel>
+              <Input
+                {...register('title', {
+                  required: 'タイトルは必須項目です',
+                })}
+              />
+              {hasError && (
+                <FormErrorMessage>{getErrorMsg('title')}</FormErrorMessage>
               )}
-
+            </FormControl>
+            {isEditMode && (
               <FormControl>
-                <FormLabel>詳細</FormLabel>
-                <Textarea {...register('content')} />
-              </FormControl>
-
-              <Center pt={3}>
-                <HStack spacing={6}>
-                  <Button
-                    onClick={() => {
-                      setModal({ show: false })
-                    }}
-                  >
-                    キャンセル
-                  </Button>
-                  <Button
-                    type='submit'
-                    colorScheme={'blue'}
-                    isLoading={loading}
-                  >
-                    {isEditMode ? '上書き保存' : '保存する'}
-                  </Button>
+                <HStack>
+                  <FormLabel m={0} lineHeight={1}>
+                    進捗
+                  </FormLabel>
+                  <Switch {...register('done')} />
                 </HStack>
-              </Center>
-            </Stack>
-          </Box>
-        </form>
-      </TodoModal>
-    </>
+              </FormControl>
+            )}
+
+            <FormControl>
+              <FormLabel>詳細</FormLabel>
+              <Textarea {...register('content')} />
+            </FormControl>
+
+            <Center pt={3}>
+              <HStack spacing={6}>
+                <Button
+                  onClick={() => {
+                    setModal({ show: false })
+                  }}
+                >
+                  キャンセル
+                </Button>
+                <Button type='submit' colorScheme={'blue'} isLoading={loading}>
+                  {isEditMode ? '上書き保存' : '保存する'}
+                </Button>
+              </HStack>
+            </Center>
+          </Stack>
+        </Box>
+      </form>
+    </TodoModal>
   )
 }

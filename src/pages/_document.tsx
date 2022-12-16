@@ -2,6 +2,7 @@ import Document, { Head, Html, Main, NextScript } from 'next/document'
 
 const fontFamilies = [
   `family=Noto+Sans+JP:wght@300;400;500;700;900`,
+  `family=Roboto:wght@300;400;500;700;900`,
   `display=swap`,
 ]
 

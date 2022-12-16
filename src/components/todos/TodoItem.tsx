@@ -1,3 +1,12 @@
+import dayjs from 'dayjs'
+import { css } from '@emotion/react'
+import { useEffect, useState } from 'react'
+import { useRecoilState } from 'recoil'
+
+import { todoState, modalState } from '@/store/todos'
+import { useForm } from 'react-hook-form'
+import { getTodos, deleteTodo, updateTodo } from '@/gql/todos'
+
 import {
   Button,
   Switch,
@@ -8,14 +17,6 @@ import {
   HStack,
   Input,
 } from '@chakra-ui/react'
-import dayjs from 'dayjs'
-
-import { getTodos, deleteTodo, updateTodo } from '@/gql/todos'
-import { useEffect, useState } from 'react'
-import { css } from '@emotion/react'
-import { useRecoilState } from 'recoil'
-import { todoState, modalState } from '@/store/todos'
-import { useForm } from 'react-hook-form'
 
 export type TodoProps = {
   id: string
