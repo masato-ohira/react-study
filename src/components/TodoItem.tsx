@@ -18,7 +18,7 @@ export type TodoProps = {
 export const TodoItem = (props: TodoProps) => {
   const [loading, setLoading] = useState(false)
   const [checked, setChecked] = useState(false)
-  const [, setTodos]: [TodoProps[], Function] = useRecoilState(todoState)
+  const [todos, setTodos]: [TodoProps[], Function] = useRecoilState(todoState)
 
   useEffect(() => {
     setChecked(props.done)

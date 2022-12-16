@@ -17,7 +17,7 @@ import {
 import { TodoProps } from '@/components'
 
 export const TodoForm = () => {
-  const [, setTodos]: [TodoProps[], Function] = useRecoilState(todoState)
+  const [todos, setTodos]: [TodoProps[], Function] = useRecoilState(todoState)
   const [loading, setLoading] = useState(false)
   const {
     register,
