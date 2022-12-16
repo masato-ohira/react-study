@@ -44,6 +44,7 @@ export const TodoItem = (props: TodoProps) => {
   // methods
   // ------------------------------
   const checkAction = async (e: any) => {
+    setLoading(true)
     setValue('done', e.target.checked)
     await updateTodo({
       id: props.id,
@@ -53,6 +54,7 @@ export const TodoItem = (props: TodoProps) => {
     // 更新しないとページ遷移の時に値が変わる
     const todos = await getTodos()
     setTodos(todos)
+    setLoading(false)
   }
 
   const deleteAction = async () => {
@@ -80,6 +82,15 @@ export const TodoItem = (props: TodoProps) => {
         transition-property: all;
         transition-duration: 0.2s;
         transition-timing-function: linear;
+
+        ${loading &&
+        css`
+          opacity: 0.5;
+          * {
+            user-select: none;
+            pointer-events: none;
+          }
+        `}
       `}
     >
       <Td w={5}>
