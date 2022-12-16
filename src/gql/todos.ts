@@ -14,6 +14,7 @@ export const getTodos = async () => {
               id
               title
               done
+              content
               createdAt
               updatedAt
             }
@@ -35,20 +36,22 @@ export const getTodos = async () => {
 
 export const addTodo = async ({
   title,
+  done = false,
   content,
 }: {
   title: string
+  done: Boolean
   content?: string
 }) => {
   try {
     const query = gql`
-      mutation addTodo($title: String!, $content: String) {
-        createTodo(data: { title: $title, content: $content, done: false }) {
+      mutation addTodo($title: String!, $content: String, $done: Boolean!) {
+        createTodo(data: { title: $title, content: $content, done: $done }) {
           id
         }
       }
     `
-    const { createTodo } = await client.request(query, { title, content })
+    const { createTodo } = await client.request(query, { title, content, done })
     const res = await publishTodo({ id: createTodo.id })
     return res
   } catch (error) {
@@ -75,19 +78,36 @@ export const publishTodo = async ({ id }: { id: string }) => {
 export const updateTodo = async ({
   id,
   done,
+  title,
+  content,
 }: {
   id: string
   done: boolean
+  title?: string
+  content?: string
 }) => {
   try {
     const query = gql`
-      mutation updateTodo($id: ID!, $done: Boolean) {
-        updateTodo(data: { done: $done }, where: { id: $id }) {
+      mutation updateTodo(
+        $id: ID!
+        $done: Boolean
+        $title: String
+        $content: String
+      ) {
+        updateTodo(
+          data: { done: $done, title: $title, content: $content }
+          where: { id: $id }
+        ) {
           id
         }
       }
     `
-    const { updateTodo } = await client.request(query, { id, done })
+    const { updateTodo } = await client.request(query, {
+      id,
+      done,
+      title,
+      content,
+    })
     const res = await publishTodo({ id: updateTodo.id })
     return res
   } catch (error) {

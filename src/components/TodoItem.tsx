@@ -1,16 +1,27 @@
-import { todoState } from '@/store/todos'
-import { Button, Switch, Td, Tr, FormControl, Text } from '@chakra-ui/react'
+import {
+  Button,
+  Switch,
+  Td,
+  Tr,
+  FormControl,
+  Text,
+  HStack,
+  Input,
+} from '@chakra-ui/react'
 import dayjs from 'dayjs'
 
 import { getTodos, deleteTodo, updateTodo } from '@/gql/todos'
 import { useEffect, useState } from 'react'
 import { css } from '@emotion/react'
 import { useRecoilState } from 'recoil'
+import { todoState, modalState } from '@/store/todos'
+import { useForm } from 'react-hook-form'
 
 export type TodoProps = {
   id: string
   title: string
   done: boolean
+  content: string
   createdAt: string
   updatedAt: string
 }
@@ -18,21 +29,24 @@ export type TodoProps = {
 export const TodoItem = (props: TodoProps) => {
   // data
   const [loading, setLoading] = useState(false)
-  const [checked, setChecked] = useState(false)
   const [todos, setTodos]: [TodoProps[], Function] = useRecoilState(todoState)
+  const [modal, setModal] = useRecoilState(modalState)
+
+  // hook-form
+  const { register, setValue, watch } = useForm()
 
   // mounted
   useEffect(() => {
-    setChecked(props.done)
-  }, [])
+    setValue('done', props.done)
+  }, [todos])
 
   // methods
   // ------------------------------
   const checkAction = async (e: any) => {
-    setChecked(e.target.checked)
+    setValue('done', e.target.checked)
     await updateTodo({
       id: props.id,
-      done: e.target.checked,
+      done: watch('done'),
     })
     // リストを更新
     // 更新しないとページ遷移の時に値が変わる
@@ -60,7 +74,7 @@ export const TodoItem = (props: TodoProps) => {
 
   return (
     <Tr
-      bgColor={checked ? 'blackAlpha.50' : 'white'}
+      bgColor={watch('done') ? 'blackAlpha.50' : 'white'}
       css={css`
         transition-property: all;
         transition-duration: 0.2s;
@@ -69,11 +83,12 @@ export const TodoItem = (props: TodoProps) => {
     >
       <Td w={5}>
         <FormControl onChange={checkAction}>
-          <Switch defaultChecked={props.done} />
+          <Input type={'hidden'} {...register('done')} />
+          <Switch isChecked={watch('done')} />
         </FormControl>
       </Td>
       <Td>
-        <Text textDecoration={checked ? 'line-through' : 'none'}>
+        <Text textDecoration={watch('done') ? 'line-through' : 'none'}>
           {props.title}
         </Text>
       </Td>
@@ -84,9 +99,23 @@ export const TodoItem = (props: TodoProps) => {
         {dayjs(props.updatedAt).format('YYYY/MM/DD HH:mm')}
       </Td>
       <Td w={5}>
-        <Button size={'sm'} isLoading={loading} onClick={deleteAction}>
-          削除
-        </Button>
+        <HStack>
+          <Button
+            size={'sm'}
+            colorScheme={'blue'}
+            onClick={() => {
+              setModal({
+                show: true,
+                id: props.id,
+              })
+            }}
+          >
+            編集
+          </Button>
+          <Button size={'sm'} isLoading={loading} onClick={deleteAction}>
+            削除
+          </Button>
+        </HStack>
       </Td>
     </Tr>
   )
