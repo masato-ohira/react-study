@@ -16,13 +16,29 @@ export type TodoProps = {
 }
 
 export const TodoItem = (props: TodoProps) => {
+  // data
   const [loading, setLoading] = useState(false)
   const [checked, setChecked] = useState(false)
   const [todos, setTodos]: [TodoProps[], Function] = useRecoilState(todoState)
 
+  // mounted
   useEffect(() => {
     setChecked(props.done)
   }, [])
+
+  // methods
+  // ------------------------------
+  const checkAction = async (e: any) => {
+    setChecked(e.target.checked)
+    await updateTodo({
+      id: props.id,
+      done: e.target.checked,
+    })
+    // リストを更新
+    // 更新しないとページ遷移の時に値が変わる
+    const todos = await getTodos()
+    setTodos(todos)
+  }
 
   const deleteAction = async () => {
     if (confirm('削除してよろしいですか？')) {
@@ -52,15 +68,7 @@ export const TodoItem = (props: TodoProps) => {
       `}
     >
       <Td w={5}>
-        <FormControl
-          onChange={async (e: any) => {
-            setChecked(e.target.checked)
-            await updateTodo({
-              id: props.id,
-              done: e.target.checked,
-            })
-          }}
-        >
+        <FormControl onChange={checkAction}>
           <Switch defaultChecked={props.done} />
         </FormControl>
       </Td>

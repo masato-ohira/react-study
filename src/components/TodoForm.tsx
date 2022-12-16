@@ -17,8 +17,11 @@ import {
 import { TodoProps } from '@/components'
 
 export const TodoForm = () => {
+  // data
   const [todos, setTodos]: [TodoProps[], Function] = useRecoilState(todoState)
   const [loading, setLoading] = useState(false)
+
+  // hook-form
   const {
     register,
     setValue,
@@ -27,6 +30,12 @@ export const TodoForm = () => {
     formState: { errors },
   } = useForm()
 
+  const hasError = get(errors, 'title') ? true : false
+  const getErrorMsg = (key: string) => {
+    return <>{get(errors, `${key}.message`)}</>
+  }
+
+  // methods
   const onSubmit = async () => {
     if (watch('title')) {
       setLoading(true)
@@ -45,11 +54,6 @@ export const TodoForm = () => {
     } else {
       console.log('NG')
     }
-  }
-
-  const hasError = get(errors, 'title') ? true : false
-  const getErrorMsg = (key: string) => {
-    return <>{get(errors, `${key}.message`)}</>
   }
 
   return (

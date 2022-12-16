@@ -10,8 +10,10 @@ import { Text, Table, Tbody, Tr, Th, Thead } from '@chakra-ui/react'
 import { TodoItem, TodoProps, TodoForm } from '@/components'
 
 const Todos: NextPage = () => {
+  // data
   const [todos, setTodos]: [TodoProps[], Function] = useRecoilState(todoState)
 
+  // mounted
   useEffect(() => {
     const init = async () => {
       const todos = await getTodos()
@@ -20,6 +22,7 @@ const Todos: NextPage = () => {
     init()
   }, [])
 
+  // components
   const todoList = todos.map((i: TodoProps) => {
     return <TodoItem key={i.id} {...i}></TodoItem>
   })
