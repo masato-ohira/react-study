@@ -1,13 +1,16 @@
-# nextjs-starter
+# README
 
-## Install
+https://oo-react-study.vercel.app/todos/
 
-```
+## 主要コマンド
+
+```zsh
+# install
 yarn
-```
 
-## Development
-
-```
+# 開発
 yarn dev
+
+# ビルド
+yarn ssg
 ```
