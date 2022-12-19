@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 
-import { getTodos } from '@/gql/todos'
+import { getTodoList } from '@/gql/todos'
 import { useRecoilState } from 'recoil'
 import { todoState } from '@/store/todos'
 
@@ -15,7 +15,7 @@ export const TodoList = () => {
   // mounted
   useEffect(() => {
     const init = async () => {
-      const todos = await getTodos()
+      const todos = await getTodoList()
       setTodos(todos)
     }
     init()

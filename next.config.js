@@ -1,6 +1,6 @@
 const withInterceptStdout = require('next-intercept-stdout')
 
-const nextConfig = withInterceptStdout(
+module.exports = withInterceptStdout(
   {
     reactStrictMode: false,
     swcMinify: true,
@@ -10,5 +10,3 @@ const nextConfig = withInterceptStdout(
   },
   (text) => (text.includes('Duplicate atom key') ? '' : text),
 )
-
-module.exports = nextConfig

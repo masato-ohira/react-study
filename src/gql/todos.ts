@@ -4,7 +4,7 @@ import { map } from 'lodash-es'
 const endpoint = `https://api-ap-northeast-1.hygraph.com/v2/clajdh47k2mg501ujeoaa2ghj/master`
 const client = new GraphQLClient(endpoint)
 
-export const getTodos = async () => {
+export const getTodoList = async () => {
   try {
     const query = gql`
       {
@@ -29,6 +29,27 @@ export const getTodos = async () => {
         ...i.node,
       }
     })
+  } catch (error) {
+    console.log({ error })
+  }
+}
+
+export const getTodo = async (id: string) => {
+  try {
+    const query = gql`
+      query GetTodo($id: ID!) {
+        todo(where: { id: $id }) {
+          id
+          title
+          content
+          done
+          createdAt
+          updatedAt
+        }
+      }
+    `
+    let { todo } = await client.request(query, { id })
+    return todo
   } catch (error) {
     console.log({ error })
   }

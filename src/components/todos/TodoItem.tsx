@@ -2,10 +2,11 @@ import dayjs from 'dayjs'
 import { css } from '@emotion/react'
 import { useEffect, useState } from 'react'
 import { useRecoilState } from 'recoil'
+import Link from 'next/link'
 
 import { todoState, modalState } from '@/store/todos'
 import { useForm } from 'react-hook-form'
-import { getTodos, deleteTodo, updateTodo } from '@/gql/todos'
+import { getTodoList, deleteTodo, updateTodo } from '@/gql/todos'
 
 import {
   Button,
@@ -52,7 +53,7 @@ export const TodoItem = (props: TodoProps) => {
     })
     // リストを更新
     // 更新しないとページ遷移の時に値が変わる
-    const todos = await getTodos()
+    const todos = await getTodoList()
     setTodos(todos)
     setLoading(false)
   }
@@ -66,7 +67,7 @@ export const TodoItem = (props: TodoProps) => {
           id: props.id,
         })
         // リストを更新
-        const todos = await getTodos()
+        const todos = await getTodoList()
         setTodos(todos)
         setLoading(false)
       } catch (error) {
@@ -112,18 +113,20 @@ export const TodoItem = (props: TodoProps) => {
       </Td>
       <Td w={5}>
         <HStack>
-          <Button
-            size={'sm'}
-            colorScheme={'blue'}
-            onClick={() => {
-              setModal({
-                show: true,
-                id: props.id,
-              })
-            }}
-          >
-            編集
-          </Button>
+          <Link href={`/todos/view/${props.id}`}>
+            <Button
+              size={'sm'}
+              colorScheme={'blue'}
+              // onClick={() => {
+              //   setModal({
+              //     show: true,
+              //     id: props.id,
+              //   })
+              // }}
+            >
+              詳細
+            </Button>
+          </Link>
           <Button size={'sm'} isLoading={loading} onClick={deleteAction}>
             削除
           </Button>

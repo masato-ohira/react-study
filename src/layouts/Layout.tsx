@@ -1,7 +1,8 @@
 import { useRouter } from 'next/router'
 import { ReactNode } from 'react'
+import { startsWith } from 'lodash-es'
 
-import { Flex, Box, Button, Stack, Container } from '@chakra-ui/react'
+import { Box, Button, Stack, Container, Text } from '@chakra-ui/react'
 import Link from 'next/link'
 
 export const Layout = ({ children }: { children: ReactNode }) => {
@@ -9,10 +10,18 @@ export const Layout = ({ children }: { children: ReactNode }) => {
   const menu = [
     { name: 'HOME', to: '/' },
     { name: 'TODOS', to: '/todos' },
+    { name: 'SWR', to: '/swr' },
   ]
 
+  const isTodo = startsWith(router.pathname, '/todos')
+
   const isActive = (pathname: string) => {
-    return pathname == router.pathname
+    switch (true) {
+      case isTodo:
+        return pathname == '/todos'
+      default:
+        return pathname == router.pathname
+    }
   }
 
   return (
@@ -56,6 +65,11 @@ export const Layout = ({ children }: { children: ReactNode }) => {
           </Stack>
         </Box>
         <Box className='l-content' flex={1}>
+          {isTodo && (
+            <Text as={'h1'} fontSize={'4xl'} fontWeight={'bold'} mb={5}>
+              TODO-APP
+            </Text>
+          )}
           {children}
         </Box>
       </Box>
