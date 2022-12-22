@@ -3,7 +3,7 @@ import type { NextPage } from 'next'
 // components
 import { TodoForm, TodoList, TodoAdd, TodoModal } from '@/components'
 
-const Todos: NextPage = () => {
+const TodoIndexPage: NextPage = () => {
   return (
     <>
       <TodoAdd />
@@ -15,4 +15,4 @@ const Todos: NextPage = () => {
   )
 }
 
-export default Todos
+export default TodoIndexPage

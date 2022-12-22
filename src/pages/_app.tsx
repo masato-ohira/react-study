@@ -1,5 +1,6 @@
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
+import '@/styles/github-markdown.scss'
 
 import { fonts } from '@/styles/fonts'
 import { RecoilRoot } from 'recoil'

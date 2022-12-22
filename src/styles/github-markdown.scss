@@ -1,5 +1,4 @@
-import { css } from '@emotion/react'
-export const markdownBody = css`
+.markdown-body {
   @media (prefers-color-scheme: dark) {
     color-scheme: dark;
     --color-prettylights-syntax-comment: #8b949e;
@@ -670,7 +669,7 @@ export const markdownBody = css`
     border-left: 0.25em solid var(--color-border-default);
     margin-top: 0;
     margin-bottom: 16px;
-    > {
+    > * {
       &:first-child {
         margin-top: 0;
       }
@@ -1157,4 +1156,4 @@ export const markdownBody = css`
   &::-webkit-calendar-picker-indicator {
     filter: invert(50%);
   }
-`
+}

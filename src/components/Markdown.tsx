@@ -8,12 +8,11 @@ const mdOptions: any = {
   typography: true,
 }
 const md = new MarkdownIt(mdOptions)
-import { markdownBody } from '@/styles/github-markdown'
 
 export const Markdown = ({ children }: { children: string }) => {
   return (
     <div
-      css={markdownBody}
+      className='markdown-body'
       dangerouslySetInnerHTML={{ __html: md.render(children) }}
     ></div>
   )

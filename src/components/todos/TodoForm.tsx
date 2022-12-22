@@ -1,10 +1,10 @@
-import { get, keyBy, map } from 'lodash-es'
+import { get, map, includes, isString } from 'lodash-es'
 import { useEffect, useState } from 'react'
-import { todoState, modalState } from '@/store/todos'
+import { todoState, modalState, todoAggregate } from '@/store/todos'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 
-import { getTodoList, addTodo, updateTodo } from '@/gql/todos'
+import { getTodoList, addTodo, updateTodo, getTodo } from '@/gql/todos'
 import { useForm } from 'react-hook-form'
 import { useRecoilState } from 'recoil'
 
@@ -21,14 +21,16 @@ import {
   Switch,
   FormLabel,
 } from '@chakra-ui/react'
-import { TodoProps, TodoModal } from '@/components'
+import { TodoProps } from '@/components'
 
-export const TodoForm = ({ detail }: { detail?: TodoProps }) => {
+export const TodoForm = () => {
   // data
+  const router = useRouter()
   const [todos, setTodos]: [TodoProps[], Function] = useRecoilState(todoState)
+  const [aggregate, setAggregate] = useRecoilState(todoAggregate)
   const [modal, setModal] = useRecoilState(modalState)
   const [loading, setLoading] = useState(false)
-  const router = useRouter()
+  const [mode, setMode] = useState('add')
 
   // hook-form
   // ------------------------------
@@ -40,7 +42,7 @@ export const TodoForm = ({ detail }: { detail?: TodoProps }) => {
   } = useForm()
 
   const hasError = get(errors, 'title') ? true : false
-  const isEditMode = detail ? true : false
+  const isEditMode = mode == 'edit' ? true : false
   const getErrorMsg = (key: string) => {
     return <>{get(errors, `${key}.message`)}</>
   }
@@ -55,17 +57,23 @@ export const TodoForm = ({ detail }: { detail?: TodoProps }) => {
   // mounted
   // ------------------------------
   useEffect(() => {
-    if (isEditMode) {
-      const ids = ['title', 'content', 'done']
-      map(ids, (id) => {
-        setValue(id, get(detail, id))
-      })
+    const init = async () => {
+      if (
+        router.isReady &&
+        includes(router.pathname, '/edit') &&
+        isString(router.query.id)
+      ) {
+        const todoID = router.query.id
+        const todo = await getTodo(todoID)
+        const ids = ['title', 'content', 'done']
+        map(ids, (id) => {
+          setValue(id, get(todo, id))
+        })
+        setMode('edit')
+      }
     }
-
-    // if (modal.show == false) {
-    //   resetForm()
-    // }
-  }, [modal])
+    init()
+  }, [router.isReady])
 
   // methods
   const onSubmit = async (form: any) => {
@@ -86,12 +94,22 @@ export const TodoForm = ({ detail }: { detail?: TodoProps }) => {
       router.replace(`/todos/view/${router.query.id}`)
     } else {
       // フォーム完了後、一覧を更新
-      const todos = await getTodoList()
-      setTodos(todos)
+      const res: any = await getTodoList({
+        limit: aggregate.limit,
+      })
+
+      setTodos(res.todos)
       // 入力内容をクリア
       resetForm()
       setLoading(false)
       setModal({ show: false })
+
+      // route情報を更新
+      setAggregate({
+        ...aggregate,
+        page: 1,
+      })
+      router.push(`/todos`)
     }
   }
 

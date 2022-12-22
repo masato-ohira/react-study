@@ -1,23 +1,8 @@
-import { TodoDetail, TodoProps } from '@/components'
-import { getTodo } from '@/gql/todos'
-import { GetServerSidePropsContext } from 'next'
-import { isString } from 'lodash-es'
+import type { NextPage } from 'next'
+import { TodoDetail } from '@/components'
 
-const TodoId = ({ detail }: { detail: TodoProps }) => {
-  return <TodoDetail detail={detail} />
+const TodoViewPage: NextPage = () => {
+  return <TodoDetail />
 }
 
-export const getServerSideProps = async ({
-  query,
-}: GetServerSidePropsContext) => {
-  const todoId = query.id
-  let detail = {}
-  if (isString(todoId)) {
-    detail = await getTodo(todoId)
-  }
-  return {
-    props: { detail },
-  }
-}
-
-export default TodoId
+export default TodoViewPage

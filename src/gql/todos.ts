@@ -4,11 +4,15 @@ import { map } from 'lodash-es'
 const endpoint = `https://api-ap-northeast-1.hygraph.com/v2/clajdh47k2mg501ujeoaa2ghj/master`
 const client = new GraphQLClient(endpoint)
 
-export const getTodoList = async () => {
+type TodosType = {
+  page?: number
+  limit?: number
+}
+export const getTodoList = async ({ page = 1, limit = 10 }: TodosType) => {
   try {
     const query = gql`
-      {
-        todosConnection(last: 9999, orderBy: createdAt_DESC) {
+      query GetTodos($limit: Int, $skip: Int) {
+        todosConnection(first: $limit, skip: $skip, orderBy: createdAt_DESC) {
           edges {
             node {
               id
@@ -19,16 +23,27 @@ export const getTodoList = async () => {
               updatedAt
             }
           }
+          aggregate {
+            count
+          }
         }
       }
     `
 
-    const { todosConnection } = await client.request(query)
-    return map(todosConnection.edges, (i) => {
+    const { todosConnection } = await client.request(query, {
+      page,
+      limit,
+      skip: limit * (page - 1),
+    })
+    const todos = map(todosConnection.edges, (i) => {
       return {
         ...i.node,
       }
     })
+    return {
+      count: todosConnection.aggregate.count,
+      todos,
+    }
   } catch (error) {
     console.log({ error })
   }

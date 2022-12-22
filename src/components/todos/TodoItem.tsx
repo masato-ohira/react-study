@@ -1,10 +1,10 @@
 import dayjs from 'dayjs'
 import { css } from '@emotion/react'
 import { useEffect, useState } from 'react'
-import { useRecoilState } from 'recoil'
+import { useRecoilState, useRecoilValue } from 'recoil'
 import Link from 'next/link'
 
-import { todoState, modalState } from '@/store/todos'
+import { todoState, todoAggregate } from '@/store/todos'
 import { useForm } from 'react-hook-form'
 import { getTodoList, deleteTodo, updateTodo } from '@/gql/todos'
 
@@ -32,7 +32,8 @@ export const TodoItem = (props: TodoProps) => {
   // data
   const [loading, setLoading] = useState(false)
   const [todos, setTodos]: [TodoProps[], Function] = useRecoilState(todoState)
-  const [modal, setModal] = useRecoilState(modalState)
+  const aggregate = useRecoilValue(todoAggregate)
+  // const [modal, setModal] = useRecoilState(modalState)
 
   // hook-form
   const { register, setValue, watch } = useForm()
@@ -53,8 +54,10 @@ export const TodoItem = (props: TodoProps) => {
     })
     // リストを更新
     // 更新しないとページ遷移の時に値が変わる
-    const todos = await getTodoList()
-    setTodos(todos)
+    const res: any = await getTodoList({
+      page: aggregate.page,
+    })
+    setTodos(res.todos)
     setLoading(false)
   }
 
@@ -67,8 +70,10 @@ export const TodoItem = (props: TodoProps) => {
           id: props.id,
         })
         // リストを更新
-        const todos = await getTodoList()
-        setTodos(todos)
+        const res: any = await getTodoList({
+          page: aggregate.page,
+        })
+        setTodos(res.todos)
         setLoading(false)
       } catch (error) {
         console.log({ error })
@@ -114,16 +119,7 @@ export const TodoItem = (props: TodoProps) => {
       <Td w={5}>
         <HStack>
           <Link href={`/todos/view/${props.id}`}>
-            <Button
-              size={'sm'}
-              colorScheme={'blue'}
-              // onClick={() => {
-              //   setModal({
-              //     show: true,
-              //     id: props.id,
-              //   })
-              // }}
-            >
+            <Button size={'sm'} colorScheme={'blue'}>
               詳細
             </Button>
           </Link>

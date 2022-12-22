@@ -1,4 +1,5 @@
 export * from './Markdown'
+export * from './Paginate'
 
 export * from './todos/TodoAdd'
 export * from './todos/TodoForm'
