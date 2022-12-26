@@ -27,3 +27,8 @@ export const modalState = atom<{
     show: false,
   },
 })
+
+export const limitState = atom<number>({
+  key: 'limitState',
+  default: 12,
+})

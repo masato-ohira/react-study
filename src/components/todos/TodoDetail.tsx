@@ -6,8 +6,12 @@ import { getTodo } from '@/gql/todos'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { isString, isObject } from 'lodash-es'
+import { useRecoilValue } from 'recoil'
+import { todoAggregate } from '@/store/todos'
 
 const Detail = ({ detail }: { detail: TodoProps }) => {
+  const aggregate = useRecoilValue(todoAggregate)
+
   return (
     <Box shadow={'md'} p={8} rounded={6}>
       <Stack spacing={4}>
@@ -36,9 +40,10 @@ const Detail = ({ detail }: { detail: TodoProps }) => {
       </Stack>
       <Center pt={8}>
         <HStack spacing={6}>
-          <Link href='/todos'>
+          <Link href={`/todos/?page=${aggregate.page}`}>
             <Button>一覧に戻る</Button>
           </Link>
+
           <Link href={`/todos/edit/${detail.id}`}>
             <Button colorScheme={'blue'}>編集する</Button>
           </Link>

@@ -1,38 +1,53 @@
-import useSWR from 'swr'
-import axios from 'axios'
-import { Box, HStack, Stack } from '@chakra-ui/react'
+import { NextPage } from 'next'
+import { Grid } from '@chakra-ui/react'
+import { useTodoList, getters } from '@/gql/tasks'
+import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
+import { useQuery } from '@/hooks/useQuery'
 
-type TodoProps = {
-  userId: number
-  id: number
-  title: string
-  completed: boolean
-}
+import {
+  Paginate,
+  LoaderContent,
+  TaskAdd,
+  TaksItem,
+  TaskType,
+} from '@/components'
 
-const SwrPage = () => {
-  const { data, error }: { data: any; error: any } = useSWR(
-    `https://jsonplaceholder.typicode.com/todos`,
-    axios,
-  )
-  const isLoading = !error && !data
-  const isError = error
+const SwrPage: NextPage = () => {
+  const router = useRouter()
+  const [count, setCount] = useState(0)
+  const { page: thisPage } = useQuery()
+  const { data, error, isLoading } = useTodoList({ page: thisPage })
+  useEffect(() => {
+    if (data) {
+      setCount(data.todosConnection.aggregate.count)
+    }
+  }, [data])
 
-  if (isLoading) return <div>Loading</div>
-  if (isError) return <div>Error</div>
+  if (isLoading) return <LoaderContent />
+  if (error) return <div>Error</div>
+  const items = getters.todos(data)
 
   return (
-    <Stack spacing={4}>
-      {data.data.map((i: TodoProps) => {
-        return (
-          <Box key={i.id} shadow={'md'} p={4}>
-            <HStack>
-              <div>{i.id}</div>
-              <div>{i.title}</div>
-            </HStack>
-          </Box>
-        )
-      })}
-    </Stack>
+    <>
+      <TaskAdd />
+      <Grid templateColumns={`repeat(4, 1fr)`} gap={4} mb={3}>
+        {items.map((i: TaskType) => {
+          return <TaksItem key={i.id} {...i} />
+        })}
+      </Grid>
+      <Paginate
+        page={thisPage - 1}
+        count={count}
+        limit={getters.limit}
+        handlePageClick={async (n: number) => {
+          const page = n + 1
+          router.replace({
+            query: { page },
+          })
+        }}
+      />
+    </>
   )
 }
 

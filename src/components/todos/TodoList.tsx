@@ -70,22 +70,18 @@ export const TodoList = () => {
         </Table>
       </TableContainer>
 
-      {aggregate.count >= aggregate.limit + 1 && (
-        <Box mt={3}>
-          <Paginate
-            page={aggregate.page - 1}
-            count={aggregate.count}
-            limit={aggregate.limit}
-            handlePageClick={async (n: number) => {
-              let page = n + 1
-              router.push({
-                query: { page },
-              })
-              fetchTodo(page)
-            }}
-          />
-        </Box>
-      )}
+      <Paginate
+        page={aggregate.page - 1}
+        count={aggregate.count}
+        limit={aggregate.limit}
+        handlePageClick={async (n: number) => {
+          let page = n + 1
+          router.push({
+            query: { page },
+          })
+          fetchTodo(page)
+        }}
+      />
     </>
   )
 }
