@@ -4,12 +4,9 @@ import { useRouter } from 'next/router'
 
 const Home: NextPage = () => {
   const router = useRouter()
-  const queryPage =
-    router.isReady && router.query.page ? router.query.page : 'NULL'
   return (
     <>
       <Box fontFamily={'var(--chakra-fonts-enSans)'}>
-        <Center>{queryPage}</Center>
         <Center textAlign={'center'} py={16}>
           <Text
             as='h1'
