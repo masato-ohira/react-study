@@ -24,22 +24,25 @@ export const Paginate: FC<PaginateProps> = ({
   return (
     <>
       {count >= limit + 1 && (
-        <Center>
-          <ChakraPaginate
-            // required props 👇
-            page={page}
-            count={count}
-            pageSize={limit}
-            onPageChange={handlePageClick}
-            // optional props 👇
-            margin={2}
-            shadow='lg'
-            fontWeight={500}
-            variant='outline'
-            colorScheme={'blue'}
-            w='full'
-          />
-        </Center>
+        <>
+          <Center>{count}件</Center>
+          <Center>
+            <ChakraPaginate
+              // required props 👇
+              page={page}
+              count={count}
+              pageSize={limit}
+              onPageChange={handlePageClick}
+              // optional props 👇
+              margin={2}
+              shadow='lg'
+              fontWeight={500}
+              variant='outline'
+              colorScheme={'blue'}
+              w='full'
+            />
+          </Center>
+        </>
       )}
     </>
   )

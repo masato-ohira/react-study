@@ -1,9 +1,7 @@
 import { NextPage } from 'next'
 import { Grid } from '@chakra-ui/react'
-import { useTodoList, getters } from '@/gql/tasks'
-import { useRouter } from 'next/router'
-import { useEffect, useState } from 'react'
-import { useQuery } from '@/hooks/useQuery'
+import { getters } from '@/gql/tasks'
+import { useListHook } from './useListHook'
 
 import {
   Paginate,
@@ -14,15 +12,7 @@ import {
 } from '@/components'
 
 const SwrPage: NextPage = () => {
-  const router = useRouter()
-  const [count, setCount] = useState(0)
-  const { page: thisPage } = useQuery()
-  const { data, error, isLoading } = useTodoList({ page: thisPage })
-  useEffect(() => {
-    if (data) {
-      setCount(data.todosConnection.aggregate.count)
-    }
-  }, [data])
+  const { router, count, thisPage, data, error, isLoading } = useListHook()
 
   if (isLoading) return <LoaderContent />
   if (error) return <div>Error</div>
